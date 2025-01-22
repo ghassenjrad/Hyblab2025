@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Tour de France - Quiz</title>
+
+    <!-- Feuille de style Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Animate.css pour des animations simples -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+
+        body {
+            min-height: 100dvh;
+            font-size: medium;
+        }
+
+        /* Taille de la carte */
+        #map {
+            width: 100%;
+            height: calc(100dvh - 400px);
+            margin-bottom: 20px;
+        }
+
+        /* Conteneur du quiz */
+        #quiz-container {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* Question */
+        #question {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Liste de réponses */
+        #answers {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #answers li {
+            margin: 5px 0;
+            padding: 8px;
+            background: #eee;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        #answers li:hover {
+            background: #ddd;
+        }
+
+        /* Bouton pour valider la réponse ou passer à la suite */
+        #validate-btn,
+        #next-btn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        #validate-btn:hover,
+        #next-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Affichage correct/incorrect */
+        .correct {
+            background-color: #c1ffc1 !important;
+            /* vert pâle */
+        }
+
+        .incorrect {
+            background-color: #ffc1c1 !important;
+            /* rouge pâle */
+        }
+
+        /* Conteneur de la photo de la ville */
+        #city-photo-container {
+            display: none;
+            /* caché par défaut, on l’affichera via JS */
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        #city-photo-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #continue-btn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        #continue-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+
+    <div id="quiz-container" class="animate__animated animate__fadeIn">
+        <div id="question"></div>
+        <ul id="answers"></ul>
+
+        <!-- Bouton pour valider la réponse -->
+        <button id="validate-btn">Valider la réponse</button>
+
+        <!-- Conteneur pour afficher la photo après validation -->
+        <div id="city-photo-container" class="animate__animated animate__fadeIn">
+            <p><strong>Découvrez la ville :</strong></p>
+            <img id="city-photo" src="" alt="Photo de la ville" />
+            <br />
+            <!-- Bouton pour passer à la ville suivante -->
+            <button id="continue-btn">Continuer vers la prochaine étape</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        /**
+         * Parcours de villes (Tour de France simplifié)
+         * Chaque objet contient :
+         * - name: nom de la ville
+         * - coords: [latitude, longitude]
+         * - question, answers, correctIndex
+         * - photoUrl: URL image (https://placehold.co)
+         */
+        const tourCities = [
+            {
+                name: "Paris",
+                coords: [48.8566, 2.3522],
+                question: "Quelle est la capitale de la France ?",
+                answers: ["Paris", "Lyon", "Marseille", "Bordeaux"],
+                correctIndex: 0,
+                photoUrl: "https://placehold.co/600x300?text=Paris"
+            },
+            {
+                name: "Orléans",
+                coords: [47.9022, 1.9040],
+                question: "Orléans est célèbre pour...",
+                answers: [
+                    "La présence d'un grand port",
+                    "Le pont du Gard",
+                    "Jeanne d'Arc",
+                    "Une grande station de ski"
+                ],
+                correctIndex: 2,
+                photoUrl: "https://placehold.co/600x300?text=Orl%C3%A9ans"
+            },
+            {
+                name: "Bordeaux",
+                coords: [44.8378, -0.5792],
+                question: "Bordeaux est surtout renommée pour...",
+                answers: [
+                    "Ses vins",
+                    "Ses volcans",
+                    "Ses automobiles",
+                    "Ses fromages"
+                ],
+                correctIndex: 0,
+                photoUrl: "https://placehold.co/600x300?text=Bordeaux"
+            },
+            {
+                name: "Toulouse",
+                coords: [43.6047, 1.4442],
+                question: "Quel surnom est donné à Toulouse ?",
+                answers: [
+                    "La Ville Orange",
+                    "La Ville Rose",
+                    "La Ville Bleue",
+                    "La Ville Verte"
+                ],
+                correctIndex: 1,
+                photoUrl: "https://placehold.co/600x300?text=Toulouse"
+            },
+            {
+                name: "Marseille",
+                coords: [43.2965, 5.3698],
+                question: "Le plat emblématique de Marseille est...",
+                answers: [
+                    "La bouillabaisse",
+                    "La tartiflette",
+                    "Le cassoulet",
+                    "La choucroute"
+                ],
+                correctIndex: 0,
+                photoUrl: "https://placehold.co/600x300?text=Marseille"
+            },
+            {
+                name: "Lyon",
+                coords: [45.7640, 4.8357],
+                question: "Lyon est historiquement réputée pour...",
+                answers: [
+                    "Ses plages",
+                    "Ses calanques",
+                    "Sa soie",
+                    "Sa cathédrale gothique"
+                ],
+                correctIndex: 2,
+                photoUrl: "https://placehold.co/600x300?text=Lyon"
+            }
+        ];
+
+        let currentIndex = 0;       // Ville (étape) en cours
+        let selectedAnswerIndex = null; // Pour mémoriser la réponse choisie
+
+        // Initialiser la carte
+        const map = L.map('map').setView(tourCities[0].coords, 6);
+
+        // Charger les tuiles OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution:
+                '© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Tracer le parcours sous forme de polyline
+        const routeCoords = tourCities.map(city => city.coords);
+        const routePolyline = L.polyline(routeCoords, {
+            color: 'blue',
+            weight: 4
+        }).addTo(map);
+
+        // Marqueur initial sur la première ville
+        let marker = L.marker(tourCities[0].coords).addTo(map);
+
+        // Sélecteurs DOM
+        const questionEl = document.getElementById("question");
+        const answersEl = document.getElementById("answers");
+        const validateBtn = document.getElementById("validate-btn");
+        const cityPhotoContainer = document.getElementById("city-photo-container");
+        const cityPhotoEl = document.getElementById("city-photo");
+        const continueBtn = document.getElementById("continue-btn");
+
+        // Afficher la question pour la ville courante
+        function displayQuestion(index) {
+            const city = tourCities[index];
+            questionEl.textContent = city.question;
+
+            // Réinitialise la zone de réponses
+            answersEl.innerHTML = "";
+            cityPhotoContainer.style.display = "none";
+            selectedAnswerIndex = null;
+
+            // Crée les éléments <li> pour chaque réponse
+            city.answers.forEach((answer, i) => {
+                const li = document.createElement('li');
+                li.textContent = answer;
+
+                li.addEventListener('click', () => {
+                    // Retire la sélection sur les autres
+                    const allLis = answersEl.querySelectorAll('li');
+                    allLis.forEach(l => l.classList.remove('correct', 'incorrect'));
+                    // Mémorise la réponse sélectionnée et met en surbrillance
+                    selectedAnswerIndex = i;
+                    li.classList.add('incorrect'); // on met par défaut "incorrect" (visuel)
+                });
+
+                answersEl.appendChild(li);
+            });
+        }
+
+        // Vérifier la réponse et afficher la photo
+        function validateAnswer() {
+            if (selectedAnswerIndex === null) return;
+
+            const city = tourCities[currentIndex];
+            const correct = city.correctIndex;
+
+            // On met en vert la bonne réponse, en rouge celle cliquée si elle est fausse
+            const allLis = answersEl.querySelectorAll('li');
+            allLis.forEach((li, index) => {
+                if (index === correct) {
+                    li.classList.add('correct');
+                } else if (index === selectedAnswerIndex) {
+                    li.classList.add('incorrect');
+                }
+                // On désactive les clics ultérieurs
+                li.style.pointerEvents = 'none';
+            });
+
+            // Afficher la photo de la ville
+            cityPhotoEl.src = city.photoUrl;
+            cityPhotoContainer.style.display = "block";
+        }
+
+        // Avancer à la ville suivante (ou terminer le jeu)
+        function goToNextCity() {
+            currentIndex++;
+            if (currentIndex >= tourCities.length) {
+                // Fin du parcours
+                questionEl.textContent = "Félicitations ! Vous avez terminé ce Tour de France.";
+                answersEl.innerHTML = "";
+                validateBtn.style.display = "none";
+                cityPhotoContainer.style.display = "none";
+                return;
+            }
+
+            // Déplacer la carte en animation "flyTo"
+            const nextCity = tourCities[currentIndex];
+            map.flyTo(nextCity.coords, 6, {
+                duration: 2 // durée en secondes
+            });
+
+            // Mettre à jour la position du marqueur
+            marker.setLatLng(nextCity.coords);
+
+            // Afficher la prochaine question
+            displayQuestion(currentIndex);
+        }
+
+        // Écouteurs d'événements
+        validateBtn.addEventListener('click', validateAnswer);
+        continueBtn.addEventListener('click', goToNextCity);
+
+        // Affichage initial
+        displayQuestion(currentIndex);
+
+    </script>
+</body>
+
+</html>
