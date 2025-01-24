@@ -18,17 +18,17 @@ const QuestionPage = () => {
 
   const basename = process.env.REACT_APP_BASENAME || "/";
   const navigate = useNavigate();
-  const { id } = useParams();
+  let {id, difficulty} = useParams();
 
   useEffect(() => {
     fetch(basename + "data/questions.yaml")
       .then((response) => response.text())
       .then((text) => {
         const data = yaml.load(text);
-        setQuestions(data.game.levels[0].stages[parseInt(id) - 1].questions);
+        setQuestions(data.game.levels[parseInt(difficulty)-1].stages[parseInt(id) - 1].questions);
       })
       .catch((error) => console.error("Erreur de chargement YAML :", error));
-  }, [id]);
+  }, [difficulty,id]);
 
   if (questions.length === 0) {
     return <p>Chargement des questions...</p>;
@@ -54,7 +54,45 @@ const QuestionPage = () => {
         setIsEnlarged(false);
         setHint1Used(false);
         setHint2Used(false);
-      } else {
+      } 
+      
+      else if (currentQuestionIndex === questions.length - 1 && parseInt(id) === 1) {
+        navigate("/transition1", { state: { finalScore: score, difficulty: difficulty } });
+        setQuestions([]);
+        setCurrentQuestionIndex(0);
+        setSelectedOptionIndex(null);
+        setValidated(false);
+        setShowHintText(false);
+        setShowHintImage(false);
+        setIsEnlarged(false);
+        id = id + 1
+      }
+
+      else if (currentQuestionIndex === questions.length - 1 && parseInt(id) === 2) {
+        navigate("/transition2", { state: { finalScore: score, difficulty: difficulty } });
+        setQuestions([]);
+        setCurrentQuestionIndex(0);
+        setSelectedOptionIndex(null);
+        setValidated(false);
+        setShowHintText(false);
+        setShowHintImage(false);
+        setIsEnlarged(false);
+        id = id + 1
+      }
+
+      else if (currentQuestionIndex === questions.length - 1 && parseInt(id) === 3) {
+        navigate("/transition3", { state: { finalScore: score, difficulty: difficulty } });
+        setQuestions([]);
+        setCurrentQuestionIndex(0);
+        setSelectedOptionIndex(null);
+        setValidated(false);
+        setShowHintText(false);
+        setShowHintImage(false);
+        setIsEnlarged(false);
+        id = id + 1
+      }
+      
+      /*else {
         navigate("/etape/" + (parseInt(id) + 1));
         setQuestions([]);
         setCurrentQuestionIndex(0);
@@ -65,7 +103,7 @@ const QuestionPage = () => {
         setIsEnlarged(false);
         setHint1Used(false);
         setHint2Used(false);
-      }
+      }*/
     }
   };
 
@@ -100,7 +138,7 @@ const QuestionPage = () => {
       <h2 className="question-number">
         QUESTION {currentQuestionIndex + 1}/{questions.length}
       </h2>
-      <h3 className="score">Score: {score}</h3>
+      <h3 className="score">id : {id}</h3>
 
       <div className="question-box">
         <p className="question-text">{currentQuestion.text}</p>
