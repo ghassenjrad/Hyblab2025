@@ -10,14 +10,21 @@ const Page0 = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/home");
-    }, 1000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [navigate]);
 
-  return <div className="background_page0">
-    <img src={`${basename}images/logo_jeu.png`} alt="Page 0 background" className="logo_page0" />
-  </div>;
+  return (
+    <div className="background_page0">
+      <img
+        src={`${basename}images/logo_jeu.png`}
+        alt="Logo du jeu"
+        className="logo_page0 position-absolute top-50 start-50 translate-middle"
+      />
+    </div>
+  );
+
 };
 
 export default Page0;

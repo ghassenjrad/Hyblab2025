@@ -1,4 +1,5 @@
 .start_page_bg {
-    background: url('bg_page_depart.png');
+    background: url('startPage.png');
     background-size: 100% 100%;
+    position: relative;
 }

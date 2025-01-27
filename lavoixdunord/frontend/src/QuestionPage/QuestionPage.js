@@ -50,9 +50,11 @@ const QuestionPage = () => {
     if (!validated) {
       const isCorrect = questions[currentQuestionIndex].options[selectedOptionIndex].correct;
       if (isCorrect) {
-        correctSound.play();
+        // correctSound.play();
+        // TODO: Ajouter un son pour la bonne réponse
       } else {
-        wrongSound.play();
+        // wrongSound.play();
+        // TODO: Ajouter un son pour la mauvaise réponse
       }
       const pointsToAdd = !isCorrect ? 35 : 20; // 35 points si incorrect (15 + 20), 20 si correct
       addScore(pointsToAdd);
@@ -191,7 +193,12 @@ const QuestionPage = () => {
             <div className="hint-item">
               <button
                 className="toggle-btn"
-                onClick={() => setShowHintText(!showHintText)}
+                onClick={() => {
+                  setShowHintText(!showHintText)
+                  if (showHintText) {
+                    setShowHintImage(false); // This will automatically close "Indice 2" when "Indice 1" is closed
+                  }
+                }}
               >
                 {showHintText ? "−" : "+"}
               </button>
@@ -202,7 +209,7 @@ const QuestionPage = () => {
             <div className="hint-item">
               <button
                 className={`toggle-btn ${!showHintText ? "disabled" : ""}`}
-                onClick={() => setShowHintImage(!showHintImage)}
+                onClick={handleHint2Click}
                 disabled={!showHintText}
               >
                 {showHintImage ? "−" : "+"}

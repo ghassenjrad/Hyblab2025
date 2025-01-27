@@ -9,7 +9,12 @@
 }
 
 .fs-6 {
-    font-size: 0.7rem !important;
+    font-size: 0.8rem !important;
+}
+
+
+.fs-7 {
+    font-size: 0.7rem;
 }
 
 /* Mobile-first styles (par défaut, pour les mobiles) */
@@ -18,7 +23,7 @@
     /* S'étend sur toute la largeur de l'écran */
     max-width: none;
     /* Supprime toute restriction de largeur */
-    padding-inline: 4px;
+    // padding-inline: 4px;
     /* Ajoute un peu d'espace intérieur */
     height: 100vh;
     overflow-y: auto;
