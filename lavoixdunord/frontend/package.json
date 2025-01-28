@@ -4,6 +4,7 @@
   "homepage": "/lavoixdunord",
   "private": true,
   "dependencies": {
+    "@maptiler/sdk": "^3.0.1",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "bootswatch": "^5.3.3",
@@ -12,6 +13,7 @@
     "leaflet": "^1.9.4",
     "ph": "file:",
     "react": "^19.0.0",
+    "react-icons": "^5.4.0",
     "react-bootstrap": "^2.10.8",
     "react-dom": "^19.0.0",
     "react-leaflet": "^5.0.0",
@@ -47,3 +49,4 @@
     ]
   }
 }
+
