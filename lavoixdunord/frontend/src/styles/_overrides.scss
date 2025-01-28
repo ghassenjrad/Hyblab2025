@@ -17,6 +17,10 @@
     font-size: 0.7rem;
 }
 
+h1, .h1 {
+    font-size: calc(2.5rem + 1.5vw);
+}
+
 /* Mobile-first styles (par défaut, pour les mobiles) */
 .mobile-container {
     width: 100%;
@@ -31,6 +35,8 @@
     background-color: $body-bg;
     /* Couleur de fond pour l'app */
     display: flex;
+    position: relative;
+    z-index: 1;
 }
 
 /* Styles spécifiques pour les écrans plus grands (desktop) */
@@ -42,7 +48,7 @@
         /* Centre horizontalement */
         border: 1px solid #ddd;
         /* Ajoute une bordure optionnelle */
-        border-radius: 10px;
+        border-radius: 5px;
         /* Coins arrondis pour un look moderne */
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         /* Ombre pour le style */

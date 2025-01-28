@@ -9,8 +9,8 @@
     background: url('arbre2.gif') no-repeat center center;
     /* Ajuster selon les besoins */
     position: absolute;
-    bottom: 0rem;
-    left: 2rem;
+    bottom: 48px;
+    left: 48px;
     height: 13rem;
     width: 9rem;
     zoom: 0.4;
@@ -18,8 +18,9 @@
 }
 
 .regle_velo {
+    z-index: 0;
     position: absolute;
-    top: 180px;
+    top: 140px;
     right: 30px;
     width: 100px;
 }
