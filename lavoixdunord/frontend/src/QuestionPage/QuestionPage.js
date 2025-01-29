@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Importer useNavigate
+import { useNavigate } from "react-router-dom";
 import yaml from "js-yaml";
 import "./QuestionPage.css";
 import { useParams } from "react-router-dom";
@@ -7,7 +7,7 @@ import MapComponent from "../MapComponent/MapComponent";
 import correctSoundFile from './sounds/rightanswer.mp3';
 import wrongSoundFile from './sounds/wronganswer.mp3';
 
-const QuestionPage = ({ showMap, setShowMap }) => {
+const QuestionPage = ({ isMuted, setIsMuted, showMap, setShowMap }) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
@@ -25,6 +25,7 @@ const QuestionPage = ({ showMap, setShowMap }) => {
   const correctSound = new Audio(correctSoundFile);
   const wrongSound = new Audio(wrongSoundFile);
 
+
   const addScore = (value) => {
     const new_value = parseInt(score + value);
     localStorage.setItem("score", parseInt(new_value));
@@ -38,6 +39,13 @@ const QuestionPage = ({ showMap, setShowMap }) => {
         const data = yaml.load(text);
         setQuestions(data.game.levels[parseInt(difficulty) - 1].stages[parseInt(id) - 1].questions);
       })
+      .then(
+        () => {
+          setTimeout(() => {
+            setShowMap({ btn: false, map: true });
+          }, 1000);
+        }
+      )
       .catch((error) => console.error("Erreur de chargement YAML :", error));
   }, [difficulty, id]);
 
@@ -48,20 +56,17 @@ const QuestionPage = ({ showMap, setShowMap }) => {
   const handleNext = () => {
     if (!validated) {
       const isCorrect = questions[currentQuestionIndex].options[selectedOptionIndex].correct;
-      if (isCorrect) {
-        // correctSound.play();
-        // TODO: Ajouter un son pour la bonne réponse
-      } else {
-        // wrongSound.play();
-        // TODO: Ajouter un son pour la mauvaise réponse
+      if (!isMuted) { // Only play sound if not muted
+        isCorrect ? correctSound.play() : wrongSound.play();
       }
-      const pointsToAdd = !isCorrect ? 35 : 20; // 35 points si incorrect (15 + 20), 20 si correct
+      const pointsToAdd = !isCorrect ? 35 : 20;
       addScore(pointsToAdd);
       setValidated(true);
-      setShowMap({ btn: true, map: false });
 
+      // maintenant la carte s'affiche avant la question
+      // setShowMap({ btn: false, map: false });
     } else {
-      setShowMap({ btn: false, map: false });
+
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOptionIndex(null);
@@ -81,6 +86,9 @@ const QuestionPage = ({ showMap, setShowMap }) => {
         setShowHintImage(false);
         setIsEnlarged(false);
       }
+
+      // maintenant la carte s'affiche avant la question
+      setShowMap({ btn: false, map: true });
     }
   };
 
@@ -112,7 +120,8 @@ const QuestionPage = ({ showMap, setShowMap }) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   const onCloseMap = () => {
-    handleNext();
+    // maintenant la carte s'affiche avant la question
+    // handleNext();
     setShowMap({ btn: false, map: false });
   }
 
@@ -128,6 +137,7 @@ const QuestionPage = ({ showMap, setShowMap }) => {
           />
         </div>
       )}
+
 
       {/* Ajout dynamique de la classe pour flouter le contenu */}
       <div className={`question-container bg_gradient_fond_vague ${isEnlarged ? "blur-background" : ""}`}>
@@ -231,6 +241,7 @@ const QuestionPage = ({ showMap, setShowMap }) => {
           isVisible={showMap.map}
         />
 
+        <div className="my-4">&nbsp;</div>
       </div>
     </>
   );
