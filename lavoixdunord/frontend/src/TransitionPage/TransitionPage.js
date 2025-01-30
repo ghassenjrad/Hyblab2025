@@ -92,7 +92,10 @@ const TransitionPage = () => {
             }}
         >
             <div className="mt-76 text-center">
-                <h1 className="text-white">FÉLICITATIONS</h1>
+                <h1 className="text-white" onClick={() => {
+                    navigate("/transition/2/3");
+                    window.location.reload()
+                }}>FÉLICITATIONS</h1>
                 <img src={currentTransition.maillot_image_icon}
                     alt="maillot"
                     className="maillot_icon"
