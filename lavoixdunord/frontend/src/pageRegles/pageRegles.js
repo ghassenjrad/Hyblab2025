@@ -33,7 +33,7 @@ const RulesPage = () => {
                     <h1 className="text-white mb-4">LES RÈGLES</h1>
                     <div className="my-4">&nbsp;</div>
                     <div className="">
-                        <p className='pt-2 position-relative'>
+                        <p className='pt-4 mt-5 position-relative'>
                             <img src={`${basename}images/illustrations/bgreglevelo.png`} alt="velo" className="regle_velo" />
 
                             <i><b>Dans le Défi des 3 maillots, chaque étape est jalonnée de questions sur les lieux marquants traversés par le parcours du Tour de France. </b></i></p>
@@ -42,7 +42,6 @@ const RulesPage = () => {
                             Une bonne réponse vous permet de continuer sans pénalité, tandis qu’une mauvaise réponse vous fait progresser, mais avec une pénalité de temps.</p>
                         <p>Si vous avez besoin d’aide, des indices sont à votre disposition. L’utilisation de l’indice 1 vous ralentit de 5 secondes, l’indice 2 vous fait perdre 10 secondes.</p>
 
-                        <p><i><b>L’objectif final est de récolter les trois maillots en réussissant les trois étapes. Vous débloquez un maillot à la fin de chaque étape.</b></i></p>
                     </div>
 
                     <button className="btn btn-outline-dark  mt-4 position-relative" onClick={() => navigate("/difficulty")}>

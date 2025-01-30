@@ -33,11 +33,16 @@ const MapComponent = ({ difficulty, level_id, currentQuestionIndex, onClose, isV
                     zoom: 13,
                     interactive: true,
                     navigationControl: true,
-                    geolocateControl: false
+                    geolocateControl: false,
                 });
+
 
                 // Attendre que la carte soit chargée
                 await new Promise((resolve, reject) => {
+                    map.current.on('load', () => {
+                        // Puis on applique la langue
+                        map.current.setLanguage(maptilersdk.Language.FRENCH);
+                    });
                     map.current.on('load', resolve);
                     map.current.on('error', reject);
                 });
@@ -69,7 +74,7 @@ const MapComponent = ({ difficulty, level_id, currentQuestionIndex, onClose, isV
             const data = yaml.load(yamlText);
             const currentQuestion = data.game.levels[parseInt(difficulty) - 1]
                 .stages[parseInt(level_id) - 1]
-                .questions[currentQuestionIndex];
+                .questions[currentQuestionIndex + 1];
             setQuestionData(currentQuestion);
             setGeoJsonData(geoJson);
         });
@@ -164,9 +169,18 @@ const MapComponent = ({ difficulty, level_id, currentQuestionIndex, onClose, isV
 
                     // Zoom sur le tracé GeoJSON
                     const bounds = new maptilersdk.LngLatBounds();
-                    geoJsonData.features[0].geometry.coordinates.forEach(coord => {
-                        bounds.extend(coord);
-                    });
+                    if (
+                        geoJsonData &&
+                        geoJsonData.features &&
+                        geoJsonData.features.length > 0 &&
+                        geoJsonData.features[0].geometry &&
+                        geoJsonData.features[0].geometry.coordinates &&
+                        geoJsonData.features[0].geometry.coordinates.length > 0
+                    ) {
+                        geoJsonData.features[0].geometry.coordinates.forEach(coord => {
+                            bounds.extend(coord);
+                        });
+                    }
 
                     map.current.fitBounds(bounds, {
                         padding: 50,
@@ -254,7 +268,7 @@ const MapComponent = ({ difficulty, level_id, currentQuestionIndex, onClose, isV
                 onClick={onClose}
                 style={{ display: isVisible ? 'block' : 'none' }}
             >
-                Répondre
+                VOIR LA QUESTION
             </button>
         </div>
     );

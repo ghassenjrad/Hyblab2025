@@ -70,7 +70,7 @@ game:
               category: Culture musicale
               text: "Quel chanteur, originaire du Nord, a popularisé la chanson Quand la mer monte et choisi un nom de scène en hommage à la ville de Godewaersvelde ?"
               options:
-                - text: "Raoul de Godewarsvelde"
+                - text: "Raoul de Godewaersvelde"
                   correct: true
                 - text: "Francis Delbarre"
                   correct: false
@@ -105,7 +105,7 @@ game:
                 longitude: 2.718659322806127
                 latitude: 50.400931458567754
                 label: "Notre-Dame-de-Lorette"
-                image: "images/Etape 1/ND Loret"
+                image: "images/Etape 1/ND Lorette anneau de la mémoire.jpg"
 
         - number: 2
           questions:
@@ -199,7 +199,7 @@ game:
                 - text: "Benjamin Bourigeaud"
                   correct: false
               hints:
-                text: "Il n’a pas remporté le ballon d’or avec une équipe de Bundesliga, alors qu’il le méritait." 
+                text: "Il n’a pas remporté le ballon d’or avec une équipe de Bundesliga alors qu’il le méritait." 
                 image: "images/Etape 2/Boulogne ribéry.jpg"
                 link: "https://www.lavoixdunord.fr/1238096/article/2022-10-07/football-franck-ribery-va-mettre-un-terme-sa-carriere"
               map:
@@ -252,7 +252,7 @@ game:
 
             - id: 3
               category: Sport
-              text: "La ville d’Isbergues est célèbre pour son grand-prix cyclisme, parmi tous ces champions quel est celui qui n’a jamais remporté cette course ?"
+              text: "La ville d’Isbergues est célèbre pour son grand-prix cycliste, parmi tous ces champions quel est celui qui n’a jamais remporté cette course ?"
               options:
                 - text: "Durand"
                   correct: false
@@ -274,7 +274,7 @@ game:
               category: Culture
               text: "Quel film à succès de Dany Boon a contribué à la renommée nationale et internationale de Bergues ?"
               options:
-                - text: "Bienvenue chez les ch’tis"
+                - text: "Bienvenue chez les Ch’tis"
                   correct: true
                 - text: "Rien à déclarer"
                   correct: false
@@ -292,13 +292,13 @@ game:
 
             - id: 5
               category: Histoire
-              text: "En mai-juin 1940, l’évacuation des troupes allées de Dunkerque vers l’Angleterre a été une des dates marquantes de la seconde guerre mondiale, quelle était le nom de code de cette événement ?"
+              text: "En mai-juin 1940, l’évacuation des troupes allées de Dunkerque vers l’Angleterre a été une des dates marquantes de la seconde guerre mondiale, quel était le nom de code de cette événement ?"
               options:
                 - text: "Opération Dynamo"
                   correct: true
                 - text: "Opération Overlord"
                   correct: false
-                - text: "Opération Dunkerk"
+                - text: "Opération Dunkerque"
                   correct: false
               hints:
                 text: "L'opération a été menée pour sauver plus de 338 000 soldats encerclés à Dunkerque, grâce à des rotations de navires entre la France et l'Angleterre." 
